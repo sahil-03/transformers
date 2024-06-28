@@ -8,22 +8,33 @@ const float EPSILON = 1e-5;
 class LayerNorm {
     public:
         void forward(float* input, float* output, 
-                     float* mean, float* rstd, 
+                     float* mean, float* sigma, 
                      float* gamma, float* beta, 
                      int B, int T, int C); 
         void backward();
     
 };
 
+inline float twoDimRead(float* x, int b, int t, int T) {
+    return x[b * T + t];
+}   
+
+inline void twoDimWrite(float* x, int b, int t, int T, float val) {
+    x[b * T + t] = val;
+}
+
+inline float* threeDimRead(float* x, int b, int t, int T, int C) {
+    return x + b * T * C + t * C;
+}
 
 void LayerNorm::forward(float* input, float* output, 
-                        float* mean, float* rstd, 
+                        float* mean, float* sigma, 
                         float* gamma, float* beta, 
                         int B, int T, int C) {
 
     for (int b = 0; b < B; b++) {
         for (int t = 0; t < T; t++) {
-            float* z = input + b * T * C + t * C;
+            float* z = threeDimRead(input, b, t, T, C);
 
             // Compute mean 
             float mu = 0.0f; 
@@ -40,21 +51,23 @@ void LayerNorm::forward(float* input, float* output,
             }
             s = 1.0f / sqrtf((s / C) + EPSILON);
 
-            // Cache mean and variance 
-            mean[b * T + t] = mu / C;
-            rstd[b * T + t] = s; 
+            // Cache mean and variance (for backward pass)
+            twoDimWrite(mean, b, t, T, mu);
+            twoDimWrite(sigma, b, t, T, s);
 
             // Compute normalization 
-            float* out_bt = output + b * T * C + t * C;
+            float* out = threeDimRead(output, b, t, T, C);
             for (int c = 0; c < C; c++) {
-                out_bt[c] = (s * (z[c] - mu)) * gamma[c] + beta[c];
+                out[c] = (s * (z[c] - mu)) * gamma[c] + beta[c];
             }
         }
     }
 }
 
 void LayerNorm::backward() {
-    // TODO 
+
+   // TODO
+
 }
 
 
