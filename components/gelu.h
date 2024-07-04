@@ -9,9 +9,10 @@ class GELU {
         GELU(bool approx);  
         ~GELU();
 
-        // functions 
-        void gelu_forward(float* X, int B, int T, int C);
-        void gelu_forward_approx(float* X, int B, int T, int C);
+        void gelu_forward(float* X, float* Y, int N);
+        void gelu_forward_approx(float* X, float* Y, int N);
+        void gelu_backward(float* X, float* DX, float* DY, int N);
+        void gelu_backward_approx(float* X, float* DX, float* DY, int N);
 };
 
 #endif 
