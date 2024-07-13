@@ -2,6 +2,9 @@
 #define _TENSOR_OPERATIONS_H
 
 
+#include <cmath> 
+#include <float.h> 
+
 inline float twoDimRead(float* x, int b, int t, int T) {
     return x[b * T + t];
 }
@@ -56,6 +59,23 @@ inline void naive_matmul_backward(float* X, float* W,
                 }
             }
         }
+    }
+}
+
+
+inline void softmax(float* X, int N) {
+    float max = -FLT_MAX; 
+    for (int i = 0; i < N; i++) { 
+        if (X[i] > max) max = X[i];
+    }
+
+    float sum = 0.0f; 
+    for (int i = 0; i < N; i++) {
+        sum += expf(X[i] - max);
+    }
+
+    for (int i = 0; i < N; i++) {
+        X[i] /= sum; 
     }
 }
 
