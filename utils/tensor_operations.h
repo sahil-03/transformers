@@ -43,27 +43,56 @@ inline void naive_matmul_forward(float* X, float* Y,
 inline void naive_matmul_backward(float* X, float* W, 
                                   float* DX, float* DY, float* DW, float* Dbias, 
                                   int B, int T, int C, int OC) {
-    for (int b = 0; b < B; b++) {
-        for (int t = 0; t < T; t++) {
-            float* Dy = threeDimRead(DY, b, t, T, OC);
-            float* Dx = threeDimRead(DX, b, t, T, C);
-            float* x = threeDimRead(X, b, t, T, C);
-            for (int o = 0; o < OC; o++) {
-                float* Dw = twoDimRead(DW, o, 0, C);  
-                float* w = twoDimRead(W, o, 0, C);
-                float dy_o = Dy[o]; 
-                Dbias[o] += (Dbias != NULL) * dy_o;
-                for (int c = 0; c < C; c++) {
-                    Dx[c] += w[c] * dy_o;
-                    Dw[c] += x[c] * dy_o; 
-                }
-            }
-        }
-    }
+    // for (int b = 0; b < B; b++) {
+    //     for (int t = 0; t < T; t++) {
+    //         float* Dy = threeDimRead(DY, b, t, T, OC);
+    //         float* Dx = threeDimRead(DX, b, t, T, C);
+    //         float* x = threeDimRead(X, b, t, T, C);
+    //         for (int o = 0; o < OC; o++) {
+    //             float* Dw = twoDimRead(DW, o, 0, C);  
+    //             float* w = twoDimRead(W, o, 0, C);
+    //             float dy_o = Dy[o]; 
+    //             Dbias[o] += (Dbias != NULL) * dy_o;
+    //             for (int c = 0; c < C; c++) {
+    //                 Dx[c] += w[c] * dy_o;
+    //                 Dw[c] += x[c] * dy_o; 
+    //             }
+    //         }
+    //     }
+    // }
 }
 
 
 inline void softmax(float* X, int N) {
+    // float max = -FLT_MAX; 
+    // for (int i = 0; i < N; i++) { 
+    //     if (X[i] > max) max = X[i];
+    // }
+
+    // float sum = 0.0f; 
+    // for (int i = 0; i < N; i++) {
+    //     X[i] = expf(X[i] - max);
+    //     sum += X[i];
+    // }
+
+    // for (int i = 0; i < N; i++) {
+    //     X[i] *= (1.0f / sum); 
+    // }
+    // float max = -FLT_MAX; 
+    // for (int i = 0; i < N; i++) { 
+    //     if (X[i] > max) max = X[i];
+    // }
+
+    // float sum = 0.0f; 
+    // for (int i = 0; i < N; i++) {
+    //     sum += expf(X[i] - max);
+    // }
+
+    // float log_sum = logf(sum);
+
+    // for (int i = 0; i < N; i++) {
+    //     X[i] = X[i] - max - log_sum;
+    // }
     float max = -FLT_MAX; 
     for (int i = 0; i < N; i++) { 
         if (X[i] > max) max = X[i];
@@ -74,8 +103,10 @@ inline void softmax(float* X, int N) {
         sum += expf(X[i] - max);
     }
 
+    float log_sum = logf(sum);
+
     for (int i = 0; i < N; i++) {
-        X[i] /= sum; 
+        X[i] = expf(X[i] - max - log_sum);
     }
 }
 
