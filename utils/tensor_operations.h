@@ -63,51 +63,21 @@ inline void naive_matmul_backward(float* X, float* W,
 }
 
 
-inline void softmax(float* X, int N) {
-    // float max = -FLT_MAX; 
-    // for (int i = 0; i < N; i++) { 
-    //     if (X[i] > max) max = X[i];
-    // }
+// inline void softmax(float* X, int N) {
+//     double max = -10000; 
+//     for (int i = 0; i < N; i++) { 
+//         if (X[i] > max) max = X[i];
+//     }
 
-    // float sum = 0.0f; 
-    // for (int i = 0; i < N; i++) {
-    //     X[i] = expf(X[i] - max);
-    //     sum += X[i];
-    // }
+//     double sum = 0.0f; 
+//     for (int i = 0; i < N; i++) {
+//         X[i] = expf(X[i] - max);
+//         sum += X[i];
+//     }
 
-    // for (int i = 0; i < N; i++) {
-    //     X[i] *= (1.0f / sum); 
-    // }
-    // float max = -FLT_MAX; 
-    // for (int i = 0; i < N; i++) { 
-    //     if (X[i] > max) max = X[i];
-    // }
-
-    // float sum = 0.0f; 
-    // for (int i = 0; i < N; i++) {
-    //     sum += expf(X[i] - max);
-    // }
-
-    // float log_sum = logf(sum);
-
-    // for (int i = 0; i < N; i++) {
-    //     X[i] = X[i] - max - log_sum;
-    // }
-    float max = -FLT_MAX; 
-    for (int i = 0; i < N; i++) { 
-        if (X[i] > max) max = X[i];
-    }
-
-    float sum = 0.0f; 
-    for (int i = 0; i < N; i++) {
-        sum += expf(X[i] - max);
-    }
-
-    float log_sum = logf(sum);
-
-    for (int i = 0; i < N; i++) {
-        X[i] = expf(X[i] - max - log_sum);
-    }
-}
+//     for (int i = 0; i < N; i++) {
+//         X[i] *= (1.0f / sum); 
+//     }
+// }
 
 #endif 
