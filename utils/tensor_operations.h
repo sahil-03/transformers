@@ -62,22 +62,4 @@ inline void naive_matmul_backward(float* X, float* W,
     // }
 }
 
-
-// inline void softmax(float* X, int N) {
-//     double max = -10000; 
-//     for (int i = 0; i < N; i++) { 
-//         if (X[i] > max) max = X[i];
-//     }
-
-//     double sum = 0.0f; 
-//     for (int i = 0; i < N; i++) {
-//         X[i] = expf(X[i] - max);
-//         sum += X[i];
-//     }
-
-//     for (int i = 0; i < N; i++) {
-//         X[i] *= (1.0f / sum); 
-//     }
-// }
-
 #endif 
