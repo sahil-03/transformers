@@ -52,7 +52,7 @@ struct CausalSelfAttention {
                         attn_bth[t2] = exp;
                     }
                     for (int t2 = 0; t2 < T; t2++) {
-                        attn_bth[t2] *= (1.0f / sum) * (t2 <= t1);  // apply the causal attention mask (compiler optimization)
+                        attn_bth[t2] *= (sum == 0.0f ? 0.0f : 1.0f / sum) * (t2 <= t1);  // apply the causal attention mask (compiler optimization)
                     }
 
                     // output
